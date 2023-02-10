@@ -2,29 +2,29 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useErrorStore } from '@/app/store/base/useErrorStore'
 import { useAuthStore } from '@/domain/base/auth/store/useAuthStore'
 import baseRoutes from '@/routes/base/routes.js'
+import routes from '@/routes/routes.js'
 
 // import Survey from '@/views/Survey.vue';
 // import Flowchart from '@/views/Flowchart.vue';
 
-const routes = [
-  ...baseRoutes,
-  {
-    path: '/',
-    redirect: 'organizations'
-  },
-  // { 
-  //   path: '/survey', 
-  //   component: Survey 
-  // },
-  // { 
-  //   path: '/flowchart', 
-  //   component: Flowchart
-  // },
-]
-
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: [
+    ...baseRoutes,
+    ...routes,
+    {
+      path: '/',
+      redirect: 'organizations'
+    },
+    // { 
+    //   path: '/survey', 
+    //   component: Survey 
+    // },
+    // { 
+    //   path: '/flowchart', 
+    //   component: Flowchart
+    // },
+  ],
 })
 
 /**
