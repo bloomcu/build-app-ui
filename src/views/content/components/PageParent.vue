@@ -6,7 +6,6 @@
         <!-- Toggle -->
         <button v-if="page.children.length" @click="showChildren = !showChildren" class="btn btn--sm btn--icon">
           <IconAngleLeft size="xs" :class="showChildren ? 'rotate-90' : 'rotate-270'" class="color-contrast-medium"/>
-          <!-- <IconPlus v-else size="xs" class="color-contrast-medium"/> -->
         </button>
         
         <!-- Title & URL -->
@@ -72,9 +71,7 @@
 <script setup>
 import { ref } from 'vue'
 import AppInlineEditor from '@/app/components/base/forms/AppInlineEditor.vue'
-import IconPlus from '@/app/components/base/icons/IconPlus.vue'
 import IconAngleLeft from '@/app/components/base/icons/IconAngleLeft.vue'
-import IconClose from '@/app/components/base/icons/IconClose.vue'
 import IconTrash from '@/app/components/base/icons/IconTrash.vue'
 
 const props = defineProps({
