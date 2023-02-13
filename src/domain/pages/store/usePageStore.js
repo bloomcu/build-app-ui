@@ -69,7 +69,7 @@ export const usePageStore = defineStore('pageStore', {
       await PageApi.destroy(auth.organization, ids)
         .then(response => {
           console.log(ids.length + ' page(s) deleted')
-          this.pages = this.pages.filter((p) => !ids.includes(p.id)) // remove resources
+          // this.pages = this.pages.filter((p) => !ids.includes(p.id)) // remove resources
         })
         
       // TODO: Catch error and re-index pages if error
@@ -82,14 +82,24 @@ export const usePageStore = defineStore('pageStore', {
       // }
     },
     
-    // async exportToCSV(ids) {
-    //   const auth = useAuthStore()
-    // 
-    //   await PageApi.exportToCSV(auth.organization)
-    //     .then(response => {
-    //       this.contentExportModalOpen = false
-    //     })
-    // },
+    async restore(ids) {
+      const auth = useAuthStore()
+      
+      await PageApi.restore(auth.organization, ids)
+        .then(response => {
+          console.log(ids.length + ' page(s) restored')
+        })
+    },
+    
+    async updateNesting({id, parent_id, order} = {}) {
+      const auth = useAuthStore()
+      
+      await PageApi.updateNesting(auth.organization, id, parent_id, order)
+        .then(response => {
+          console.log(response.data)
+          // this.selected = []
+        })
+    },
 
     selectPage(id, event) {
       // Add to array if not present. Remove if already present.
