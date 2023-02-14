@@ -9,7 +9,7 @@ Usage: codyhouse.co/license
 
 .int-table {
   overflow: hidden;
-  border-bottom: 2px solid var(--color-contrast-lower);
+  // border-bottom: 2px solid var(--color-contrast-lower);
 }
 
 .int-table__inner {
@@ -42,19 +42,24 @@ Usage: codyhouse.co/license
 .int-table__header {
   .int-table__cell {
     background-color: var(--color-bg);
-    box-shadow: 0 2px 0 var(--color-contrast-lower);
+    // box-shadow: 0 2px 0 var(--color-contrast-lower);
   }
 }
 
 .int-table__body {
   .int-table__row {
-    border-bottom: 1px solid var(--color-contrast-lower);
+    // border-bottom: 1px solid var(--color-contrast-lower);
 
     &:last-child {
       border-bottom: none;
     }
   }
-
+  
+  .int-table__row--child {
+    background-color: alpha(var(--color-primary), 0.1);
+    border-color: alpha(var(--color-primary), 0.25);
+  }
+  
   .int-table__row--checked {
     background-color: alpha(var(--color-primary), 0.1);
     border-color: alpha(var(--color-primary), 0.25);

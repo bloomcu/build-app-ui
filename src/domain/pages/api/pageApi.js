@@ -60,15 +60,33 @@ const pageApi = {
         return HttpClient.post(`/${organization}/pages/destroy`, {ids: ids})
     },
     
-    // /**
-    //  * Export pages to CSV file
-    //  *
-    //  * @param String organization [Organization slug]
-    //  * @return promise
-    //  */
-    // exportToCSV(organization) {
-    //   return HttpClient.get(`/${organization}/pages/export/csv`, {responseType: 'arraybuffer'})
-    // },
+    /**
+     * Restore a page
+     *
+     * @param String organization [Organization slug]
+     * @param Integer ids [Page ids]
+     * @return promise
+     */
+    restore(organization, ids) {
+        return HttpClient.post(`/${organization}/pages/restore`, {ids: ids})
+    },
+    
+    /**
+     * Update page parent
+     *
+     * @param String organization [Organization slug]
+     * @param Integer id [Page id]
+     * @param Integer parent_id [Parent page id in which page was placed]
+     * @param Integer order [Order in which page was placed]
+     * @return promise
+     */
+    // updateNesting(organization, id, parent_id, order = null) {
+    updateNesting(organization, id, parent_id, order) {
+      return HttpClient.put(`/${organization}/pages/${id}/nesting`, {
+        parent_id: parent_id,
+        order: order,
+      })
+    },
 }
 
 export { pageApi }

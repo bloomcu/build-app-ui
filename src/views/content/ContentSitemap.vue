@@ -3,19 +3,17 @@
     <div class="flex">
       <aside class="position-relative z-index-1 width-100% padding-y-sm padding-right-md border-right" style="max-width: 280px;">
         <AppNestedMenu v-if="statuses.status" :items="statuses.status" title="status" :selected="query['status']" @selected="filterStatus"/>
-        <!-- <AppNestedMenu v-if="categories.children" :items="categories.children" title="category" :selected="query['category']" @selected="filterCategory"/> -->
+        <AppNestedMenu v-if="categories.children" :items="categories.children" title="category" :selected="query['category']" @selected="filterCategory"/>
       </aside>
       
       <main class="position-relative z-index-1 flex-grow height-100vh">
         <div class="padding-left-md">
-          <ContentTableTopBar/>
           <ContentSkeletonLoader v-if="pageStore.isLoading" class="margin-top-sm"/>
-          <ContentTable v-else/>
+          <ul v-else class="list list--border">
+            <PageListItem v-for="page in pageStore.pages" :page="page" :key="page.id" class="padding-top-md"/>
+          </ul>
         </div>
       </main>
-      
-      <!-- <ContentCategoryModal/> -->
-      <ContentExportModal/>
     </div>
   </LayoutDefault>
 </template>
@@ -27,21 +25,18 @@ import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/domain/base/auth/store/useAuthStore'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
 import { useStatusStore } from '@/domain/base/statuses/store/useStatusStore'
-// import { useCategoryStore } from '@/domain/base/categories/store/useCategoryStore'
+import { useCategoryStore } from '@/domain/base/categories/store/useCategoryStore'
 import useQuery from '@/app/composables/base/useQuery.js'
 
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
 import AppNestedMenu from '@/app/components/base/nested-menu/AppNestedMenu.vue'
 import ContentSkeletonLoader from '@/views/content/loaders/ContentSkeletonLoader.vue'
-import ContentTable from '@/views/content/components/ContentTable.vue'
-import ContentTableTopBar from '@/views/content/components/ContentTableTopBar.vue'
-// import ContentCategoryModal from '@/views/content/modals/ContentCategoryModal.vue'
-import ContentExportModal from '@/views/content/modals/ContentExportModal.vue'
+import PageListItem from '@/views/content/components/PageListItem.vue'
 
 const auth = useAuthStore()
 const pageStore = usePageStore()
 const statuses = useStatusStore()
-// const categories = useCategoryStore()
+const categories = useCategoryStore()
 const route = useRoute()
 const { query, set, unset } = useQuery()
 
@@ -57,9 +52,9 @@ function filterStatus(value) {
   value ? set('status', value) : unset('status')
 }
 
-// function filterCategory(value) {
-//   value ? set('category', value) : unset('category')
-// }
+function filterCategory(value) {
+  value ? set('category', value) : unset('category')
+}
 
 watch(route, (newValue) => {
   indexPages()
@@ -68,6 +63,6 @@ watch(route, (newValue) => {
 onMounted(() => {
   indexPages()
   statuses.show('page-statuses')
-  // categories.show('page-categories')
+  categories.show('page-categories')
 })
 </script>
