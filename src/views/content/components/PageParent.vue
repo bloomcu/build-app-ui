@@ -96,7 +96,9 @@
         item-key="id"
       >
         <template #item="{element}">
-          <!-- <PageParent :page="element" class="border-left border-top border-bottom radius-lg radius-top-right-0 radius-bottom-right-0 margin-bottom-xs"/> -->
+          <div class="sr-only">
+            {{element}}
+          </div>
         </template>
       </Draggable>
     </div>
