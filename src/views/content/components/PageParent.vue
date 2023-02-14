@@ -70,16 +70,33 @@
       </div>
     </div>
     
-    <div v-if="page.children.length && showChildren" class="margin-left-sm">
+    <div v-if="page.children && showChildren" class="margin-left-sm">
       <Draggable 
         :list="page.children" 
         :animation="200" 
+        :options="{swapThreshold: 0.5, emptyInsertThreshold: 20}"
         @change="handleDragEvent" 
         group="pages" 
         item-key="id"
       >
         <template #item="{element}">
           <PageParent :page="element" class="border-left border-top border-bottom radius-lg radius-top-right-0 radius-bottom-right-0 margin-bottom-xs"/>
+        </template>
+      </Draggable>
+    </div>
+    
+    <div v-else class="margin-left-xxxxl padding-y-xxs bg-dark radius-lg radius-top-right-0 radius-bottom-right-0 radius-bottom-left-0">
+      <Draggable 
+        :list="page.children" 
+        :animation="200" 
+        :options="{swapThreshold: 0.5, emptyInsertThreshold: 20}"
+        :emptyInsertThreshold='20'
+        @change="handleDragEvent" 
+        group="pages" 
+        item-key="id"
+      >
+        <template #item="{element}">
+          <!-- <PageParent :page="element" class="border-left border-top border-bottom radius-lg radius-top-right-0 radius-bottom-right-0 margin-bottom-xs"/> -->
         </template>
       </Draggable>
     </div>
