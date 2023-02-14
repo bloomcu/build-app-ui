@@ -95,7 +95,7 @@
       </Draggable>
     </div>
     
-    <div v-else-if="pageStore.dragging" class="margin-x-sm margin-bottom-sm bg-dark radius-lg">
+    <div v-else-if="pageStore.dragging" class="margin-left-xxxl margin-bottom-sm bg-dark radius-lg">
       <Draggable 
         :list="page.children" 
         :animation="200"
