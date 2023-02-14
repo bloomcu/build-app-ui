@@ -3,7 +3,7 @@
     <Draggable 
       :list="pageStore.pages" 
       :animation="200" 
-      :options="{swapThreshold: 0.5, emptyInsertThreshold: 20}"
+      :options="{swapThreshold: 0.1, emptyInsertThreshold: 20}"
       @change="handleDragEvent"
       group="pages" 
       item-key="id"

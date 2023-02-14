@@ -74,7 +74,7 @@
       <Draggable 
         :list="page.children" 
         :animation="200" 
-        :options="{swapThreshold: 0.5, emptyInsertThreshold: 20}"
+        :options="{swapThreshold: 0.1, emptyInsertThreshold: 20}"
         @change="handleDragEvent" 
         group="pages" 
         item-key="id"
@@ -85,11 +85,11 @@
       </Draggable>
     </div>
     
-    <div v-else class="margin-left-xxxxl padding-y-xxs bg-dark radius-lg radius-top-right-0 radius-bottom-right-0 radius-bottom-left-0">
+    <div v-else style="min-height: 20px;" class="margin-left-xxxxl padding-y-xxxs bg-dark radius-lg radius-top-right-0 radius-bottom-right-0 radius-bottom-left-0">
       <Draggable 
         :list="page.children" 
         :animation="200" 
-        :options="{swapThreshold: 0.5, emptyInsertThreshold: 20}"
+        :options="{swapThreshold: 0.1, emptyInsertThreshold: 20}"
         :emptyInsertThreshold='20'
         @change="handleDragEvent" 
         group="pages" 
