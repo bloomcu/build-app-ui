@@ -2,14 +2,18 @@
   <div v-if="pageStore.pages">
     <Draggable 
       :list="pageStore.pages" 
-      :animation="200" 
-      :options="{swapThreshold: 0.1, emptyInsertThreshold: 20}"
+      :animation="200"
       @change="handleDragEvent"
+      @start="pageStore.dragging = true"
+      @end="pageStore.dragging = false"
       group="pages" 
+      ghost-class="ghost"
+      handle=".handle"
+      class="flex flex-column gap-sm"
       item-key="id"
     >
       <template #item="{element}">
-        <PageParent :page="element" class="margin-bottom-sm border radius-md shadow-sm"/>
+        <PageParent :page="element" class="border radius-md shadow-sm"/>
       </template>
     </Draggable>
   </div>
@@ -53,3 +57,11 @@ function handleDragEvent(event) {
 //   isHighlighting.value = false
 // }
 </script>
+
+<style lang="scss">
+.ghost {
+  // opacity: 0.5;
+  border: none;
+  background: #ede8fe;
+}
+</style>

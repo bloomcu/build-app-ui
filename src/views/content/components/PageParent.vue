@@ -3,6 +3,14 @@
     <div class="flex flex-row items-center justify-between padding-left-sm padding-y-sm">
       <!-- Left -->
       <div class="flex flex-row gap-sm items-center">  
+        <!-- Handle -->
+        <button class="btn btn--sm btn--icon handle" style="cursor: grab;">
+          <!-- TODO: Make this an app icon -->
+          <svg class="icon icon--xs fill-current color-contrast-medium" viewBox="0 0 24 24">
+            <g><path data-color="color-2" d="M23,13H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,13,23,13z"></path> <path d="M23,6H1C0.4,6,0,5.6,0,5s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,6,23,6z"></path> <path d="M23,20H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,20,23,20z"></path></g>
+          </svg>
+        </button>
+        
         <!-- Toggle -->
         <button v-if="page.children.length" @click="showChildren = !showChildren" class="btn btn--sm btn--icon">
           <IconAngleLeft size="xs" :class="showChildren ? 'rotate-90' : 'rotate-270'" class="color-contrast-medium"/>
@@ -73,10 +81,12 @@
     <div v-if="page.children && showChildren" class="margin-left-sm">
       <Draggable 
         :list="page.children" 
-        :animation="200" 
-        :options="{swapThreshold: 0.1, emptyInsertThreshold: 20}"
+        :animation="200"
         @change="handleDragEvent" 
+        @start="pageStore.dragging = true"
+        @end="pageStore.dragging = false"
         group="pages" 
+        ghost-class="ghost"
         item-key="id"
       >
         <template #item="{element}">
@@ -85,15 +95,17 @@
       </Draggable>
     </div>
     
-    <div v-else style="min-height: 20px;" class="margin-left-xxxxl padding-y-xxxs bg-dark radius-lg radius-top-right-0 radius-bottom-right-0 radius-bottom-left-0">
+    <div v-else-if="pageStore.dragging" class="margin-x-sm margin-bottom-sm bg-dark radius-lg">
       <Draggable 
         :list="page.children" 
-        :animation="200" 
-        :options="{swapThreshold: 0.1, emptyInsertThreshold: 20}"
-        :emptyInsertThreshold='20'
+        :animation="200"
         @change="handleDragEvent" 
+        @start="pageStore.dragging = true"
+        @end="pageStore.dragging = false"
         group="pages" 
+        ghost-class="ghost"
         item-key="id"
+        style="min-height: 20px; display: block;" 
       >
         <template #item="{element}">
           <div class="sr-only">
@@ -271,3 +283,11 @@ function handleDragEvent(event) {
 //   }
 // }
 </script>
+
+<style lang="scss">
+// .ghost {
+//   // opacity: 0.5;
+//   border: none;
+//   background: #ede8fe;
+// }
+</style>

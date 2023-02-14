@@ -11,6 +11,7 @@ export const usePageStore = defineStore('pageStore', {
     contentCategoryModalOpen: false,
     contentExportModalOpen: false,
     isLoading: false,
+    dragging: false, // TODO: Remove
   }),
 
   actions: {
