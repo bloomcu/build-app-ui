@@ -7,10 +7,10 @@
           <span class="margin-left-xxs">Back</span>
         </RouterLink>
         
-        <button v-if="canAbort(store.crawl.status)" @click.stop="abort(store.crawl.id)"  class="btn btn--subtle">
+        <!-- <button v-if="canAbort(store.crawl.status)" @click.stop="abort(store.crawl.id)"  class="btn btn--subtle">
           <IconCancel size="xs" class="color-primary"/>
           <span class="margin-left-xxs">Cancel</span>
-        </button>
+        </button> -->
         
         <!-- <button v-if="store.crawl.status == 'SUCCEEDED' && !store.isImportingResults" @click.stop="importResults(store.crawl.id)" class="btn btn--primary">
           Import results
@@ -30,10 +30,10 @@
         <p class="text-sm margin-bottom-xs">Created {{ moment(store.crawl.created_at).fromNow() }}</p>
         <h1 class="text-lg margin-bottom-sm">{{ store.crawl.url }}</h1>
         <!-- TODO: Create a CrawlStatus.vue component that wraps up all this logic -->
-        <AppChip :color="getStatusColor(store.crawl.status)">
+        <!-- <AppChip :color="getStatusColor(store.crawl.status)">
           <AppCircleLoader v-if="isInProgress(store.crawl.status)" class="margin-right-xxxs"/>
           {{ store.crawl.status }}
-        </AppChip>
+        </AppChip> -->
       </div>
       
       <!-- Crawl results -->
