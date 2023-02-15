@@ -12,7 +12,10 @@
           <span class="margin-left-xxs">Cancel</span>
         </button>
         
-        <button v-if="store.crawl.status == 'SUCCEEDED' && !store.isImportingResults" @click.stop="importResults(store.crawl.id)" class="btn btn--primary">
+        <!-- <button v-if="store.crawl.status == 'SUCCEEDED' && !store.isImportingResults" @click.stop="importResults(store.crawl.id)" class="btn btn--primary">
+          Import results
+        </button> -->
+        <button  @click.stop="importResults(store.crawl.id)" class="btn btn--primary">
           Import results
         </button>
         
