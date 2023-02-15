@@ -135,8 +135,25 @@ const props = defineProps({
 
 const showChildren = ref(false)
 
+function recursiveUpdateTitle(page, id, title) {
+  if (page.id === id) {
+    page.title = title
+  } else if (page.children.length) {
+    page.children.forEach((child) => {
+      recursiveUpdateTitle(child, id, title)
+    })
+  }
+}
+
 function updateTitle(id, title) {
   pageStore.update([id], {title: title})
+  
+  // Update all selected pages in store
+  // Optimize this by reducing down to only selected
+  // Optimize by flattening pages array
+  pageStore.pages.forEach((page) => {
+    recursiveUpdateTitle(page, id, title)
+  })
 }
 
 function updateUrl(id, url) {
