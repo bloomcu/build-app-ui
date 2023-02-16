@@ -26,7 +26,7 @@
       </div>
       
       <!-- Right dropzone -->
-      <div v-if="true" class="_margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg">
+      <div v-if="pageStore.dragging" class="_margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg">
         <Draggable 
           :list="page.children" 
           :swap-threshold="1"
