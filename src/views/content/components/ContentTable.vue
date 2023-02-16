@@ -5,6 +5,8 @@
       :animation="200"
       :swap-threshold="1"
       :empty-insert-threshold="1"
+      :forceFallback="true"
+      :preventOnFilter="false"
       @change="handleDragEvent"
       @start="pageStore.dragging = true"
       @end="pageStore.dragging = false"
