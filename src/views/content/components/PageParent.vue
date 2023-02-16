@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="flex flex-row items-center justify-between _padding-left-sm _padding-y-sm">
+    <div class="flex flex-row items-center justify-between _padding-left-sm _padding-y-sm" style="height: 45px;">
       <!-- Left -->
       <div class="flex flex-row gap-sm items-center">  
         <!-- Handle -->
@@ -21,12 +21,14 @@
             {{ page.title }}
           </AppInlineEditor>
           
-          <a v-if="page.url" :href="page.url" target="_blank" class="page-url text-xs color-contrast-low width-fit">{{ page.url }}</a>
+          <a v-if="page.url" :href="page.url" target="_blank" class="page-url text-xs color-contrast-low width-fit">
+            {{ page.url }}
+          </a>
         </div>
       </div>
       
       <!-- Right dropzone -->
-      <div v-if="true" class="parent-dropzone _margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg" style="height: 50px;">
+      <div v-if="pageStore.dragging" class="parent-dropzone _margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg" style="height: 45px;">
         <Draggable 
           :list="page.children" 
           :animation="200"

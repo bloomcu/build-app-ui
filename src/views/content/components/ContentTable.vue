@@ -13,7 +13,7 @@
       group="pages" 
       ghost-class="ghost"
       handle=".handle"
-      class="flex flex-column"
+      class="flex flex-column align-middle"
       item-key="id"
     >
       <template #item="{element}">
