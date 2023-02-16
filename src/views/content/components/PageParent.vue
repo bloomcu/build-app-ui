@@ -21,14 +21,15 @@
             {{ page.title }}
           </AppInlineEditor>
           
-          <a v-if="page.url" :href="page.url" target="_blank" class="text-xs color-contrast-low width-fit">{{ page.url }}</a>
+          <a v-if="page.url" :href="page.url" target="_blank" class="page-url text-xs color-contrast-low width-fit">{{ page.url }}</a>
         </div>
       </div>
       
       <!-- Right dropzone -->
-      <div v-if="pageStore.dragging" class="_margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg">
+      <div v-if="true" class="parent-dropzone _margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg" style="height: 50px;">
         <Draggable 
           :list="page.children" 
+          :animation="200"
           :swap-threshold="1"
           :empty-insert-threshold="1"
           @change="handleDragEvent" 
@@ -39,7 +40,7 @@
           handle=".handle"
           item-key="id"
           class="radius-lg"
-          style="width: 750px; min-height: 50px; display: block; background-color: #f3f3f3; border: 1px solid #fff;" 
+          style="width: 750px; height: 100%; display: block; background-color: #f3f3f3; border: 1px solid #fff;" 
         >
           <template #item="{element}">
             <div :element="element"></div>
@@ -102,6 +103,7 @@
     <div v-if="page.children && showChildren" class="margin-left-lg">
       <Draggable 
         :list="page.children" 
+        :animation="200"
         :swap-threshold="1"
         :empty-insert-threshold="1"
         @change="handleDragEvent" 
@@ -305,9 +307,17 @@ function handleDragEvent(event) {
 </script>
 
 <style lang="scss">
-// .ghost {
-//   // opacity: 0.5;
-//   border: none;
-//   background: #ede8fe;
-// }
+.ghost {
+  opacity: 0.3;
+  border: none;
+  background: #000;
+  // width: 20px;
+  // height: 20px;
+  // border-radius: 200px;
+  
+  .page-url,
+  .parent-dropzone {
+    display: none;
+  }
+}
 </style>
