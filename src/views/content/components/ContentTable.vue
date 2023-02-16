@@ -14,7 +14,11 @@
       item-key="id"
     >
       <template #item="{element}">
-        <PageParent :page="element" class="_border _radius-md _shadow-sm _border-bottom _margin-bottom-xs _padding-y-xs"/>
+        <PageParent 
+          :page="element" 
+          class="_border _radius-md _shadow-sm _border-bottom _margin-bottom-xs _padding-y-xs"
+          style="box-shadow:0px 1px 0px #e6e6e6;"
+        />
       </template>
     </Draggable>
   </div>
