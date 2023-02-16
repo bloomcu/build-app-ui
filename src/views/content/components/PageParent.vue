@@ -1,11 +1,10 @@
 <template>
   <div class="">
-    <div class="flex flex-row items-center justify-between padding-left-sm padding-y-sm">
+    <div class="flex flex-row items-center justify-between _padding-left-sm _padding-y-sm">
       <!-- Left -->
       <div class="flex flex-row gap-sm items-center">  
         <!-- Handle -->
         <button class="btn btn--sm btn--icon handle" style="cursor: grab;">
-          <!-- TODO: Make this an app icon -->
           <svg class="icon icon--xs fill-current color-contrast-medium" viewBox="0 0 24 24">
             <g><path data-color="color-2" d="M23,13H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,13,23,13z"></path> <path d="M23,6H1C0.4,6,0,5.6,0,5s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,6,23,6z"></path> <path d="M23,20H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,20,23,20z"></path></g>
           </svg>
@@ -26,8 +25,30 @@
         </div>
       </div>
       
-      <!-- Right -->
-      <div class="flex flex-row gap-md items-center padding-right-sm">
+      <!-- Right dropzone -->
+      <div v-if="pageStore.dragging" class="_margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg">
+        <Draggable 
+          :list="page.children" 
+          :swap-threshold="1"
+          :empty-insert-threshold="1"
+          @change="handleDragEvent" 
+          @start="pageStore.dragging = true"
+          @end="pageStore.dragging = false"
+          group="pages" 
+          ghost-class="ghost"
+          handle=".handle"
+          item-key="id"
+          class="radius-lg"
+          style="width: 400px; min-height: 50px; display: block; background-color: #f3f3f3; border: 5px solid #fff;" 
+        >
+          <template #item="{element}">
+            <div :element="element">Drop here</div>
+          </template>
+        </Draggable>
+      </div>
+      
+      <!-- Right Controls -->
+      <div v-else class="flex flex-row gap-md items-center _padding-right-sm">
         <!-- Status -->
         <div v-if="!page.deleted_at" class="btns inline-flex text-xs">
           <button 
@@ -81,36 +102,18 @@
     <div v-if="page.children && showChildren" class="margin-left-sm">
       <Draggable 
         :list="page.children" 
-        :animation="200"
+        :swap-threshold="1"
+        :empty-insert-threshold="1"
         @change="handleDragEvent" 
         @start="pageStore.dragging = true"
         @end="pageStore.dragging = false"
         group="pages" 
         ghost-class="ghost"
+        handle=".handle"
         item-key="id"
       >
         <template #item="{element}">
-          <PageParent :page="element" class="border-left border-top border-bottom radius-lg radius-top-right-0 radius-bottom-right-0 margin-bottom-xs"/>
-        </template>
-      </Draggable>
-    </div>
-    
-    <div v-else-if="pageStore.dragging" class="margin-left-xxxl margin-bottom-sm bg-dark radius-lg">
-      <Draggable 
-        :list="page.children" 
-        :animation="200"
-        @change="handleDragEvent" 
-        @start="pageStore.dragging = true"
-        @end="pageStore.dragging = false"
-        group="pages" 
-        ghost-class="ghost"
-        item-key="id"
-        style="min-height: 20px; display: block;" 
-      >
-        <template #item="{element}">
-          <div class="sr-only">
-            {{element}}
-          </div>
+          <PageParent :page="element" class="border-left border-top border-bottom radius-lg radius-top-right-0 radius-bottom-right-0 _margin-bottom-xs"/>
         </template>
       </Draggable>
     </div>
