@@ -17,7 +17,7 @@
         
         <!-- Title & URL -->
         <div>
-          <AppInlineEditor :id="page.id" @updated="updateTitle" class="width-fit text-base">
+          <AppInlineEditor :id="page.id" @updated="updateTitle" class="width-fit text-sm">
             {{ page.title }}
           </AppInlineEditor>
           
@@ -26,7 +26,7 @@
       </div>
       
       <!-- Right dropzone -->
-      <div v-if="pageStore.dragging" class="_margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg">
+      <div v-if="true" class="_margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg">
         <Draggable 
           :list="page.children" 
           :swap-threshold="1"
@@ -39,10 +39,10 @@
           handle=".handle"
           item-key="id"
           class="radius-lg"
-          style="width: 400px; min-height: 50px; display: block; background-color: #f3f3f3; border: 5px solid #fff;" 
+          style="width: 750px; min-height: 50px; display: block; background-color: #f3f3f3; border: 1px solid #fff;" 
         >
           <template #item="{element}">
-            <div :element="element">Drop here</div>
+            <div :element="element"></div>
           </template>
         </Draggable>
       </div>
@@ -99,7 +99,7 @@
       </div>
     </div>
     
-    <div v-if="page.children && showChildren" class="margin-left-sm">
+    <div v-if="page.children && showChildren" class="margin-left-lg">
       <Draggable 
         :list="page.children" 
         :swap-threshold="1"
@@ -113,7 +113,7 @@
         item-key="id"
       >
         <template #item="{element}">
-          <PageParent :page="element" class="border-left border-top border-bottom radius-lg radius-top-right-0 radius-bottom-right-0 _margin-bottom-xs"/>
+          <PageParent :page="element" class="_border-left border-top _border-bottom _radius-lg _radius-top-right-0 _radius-bottom-right-0 _margin-bottom-xs"/>
         </template>
       </Draggable>
     </div>
