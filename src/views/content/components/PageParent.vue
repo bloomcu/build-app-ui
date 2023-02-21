@@ -11,8 +11,8 @@
         </button>
         
         <!-- Toggle -->
-        <button v-if="page.children.length" @click="showChildren = !showChildren" class="btn btn--sm btn--icon">
-          <IconAngleLeft size="xs" :class="showChildren ? 'rotate-90' : 'rotate-270'" class="color-contrast-medium"/>
+        <button v-if="page.children.length" @click="pageStore.toggleParent(page.id)" class="btn btn--sm btn--icon">
+          <IconAngleLeft size="xs" :class="pageStore.toggled.includes(page.id) ? 'rotate-90' : 'rotate-270'" class="color-contrast-medium"/>
         </button>
         
         <!-- Title & URL -->
@@ -104,7 +104,7 @@
       </div>
     </div>
     
-    <div v-if="page.children && showChildren" class="margin-left-lg">
+    <div v-if="page.children && pageStore.toggled.includes(page.id)" class="margin-left-lg">
       <Draggable 
         :list="sorted" 
         :animation="200"
