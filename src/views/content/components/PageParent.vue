@@ -106,7 +106,7 @@
     
     <div v-if="page.children && showChildren" class="margin-left-lg">
       <Draggable 
-        :list="page.children" 
+        :list="sorted" 
         :animation="200"
         :swap-threshold="1"
         :empty-insert-threshold="1"
@@ -130,7 +130,7 @@
 
 <script setup>
 import Draggable from 'vuedraggable'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
 import AppInlineEditor from '@/app/components/base/forms/AppInlineEditor.vue'
 import IconAngleLeft from '@/app/components/base/icons/IconAngleLeft.vue'
@@ -145,6 +145,25 @@ const props = defineProps({
 })
 
 const showChildren = ref(false)
+
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        /* next line works with strings and numbers, 
+         * and you may want to customize it to your needs
+         */
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+}
+
+let sorted = computed(() => {
+  return props.page.children.sort(dynamicSort('order'))
+})
 
 function recursiveUpdateTitle(page, id, title) {
   if (page.id === id) {
@@ -261,9 +280,6 @@ function restore(id) {
 
 function handleDragEvent(event) {
   if (event.moved) {
-    console.log('moved')
-    // console.log(event)
-    
     pageStore.updateNesting({
       id: event.moved.element.id,
       parent_id: props.page.id,
@@ -272,9 +288,6 @@ function handleDragEvent(event) {
   }
   
   if (event.added) {
-    console.log('added')
-    // console.log(event)
-    
     pageStore.updateNesting({
       id: event.added.element.id,
       parent_id: props.page.id,
