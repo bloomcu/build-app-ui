@@ -7,6 +7,7 @@ export const usePageStore = defineStore('pageStore', {
     pages: [],
     page: {},
     selected: [],
+    toggled: [],
     lastSelected: null,
     contentCategoryModalOpen: false,
     contentExportModalOpen: false,
@@ -145,6 +146,13 @@ export const usePageStore = defineStore('pageStore', {
 
     clearSelectedPages() {
       this.selected = []
+    },
+    
+    toggleParent(id) {
+      // Add to array if not present. Remove if already present.
+      // TODO: Abstract this away
+      let index = this.toggled.indexOf(id)
+          index === -1 ? this.toggled.push(id) : this.toggled.splice(index, 1)
     },
     
     toggleContentCategoryModal() {
