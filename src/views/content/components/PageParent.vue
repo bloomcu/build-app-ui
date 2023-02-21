@@ -1,8 +1,8 @@
 <template>
   <div class="">
-    <div class="flex flex-row items-center justify-between _padding-left-sm _padding-y-sm" style="height: 45px;">
-      <!-- Left -->
-      <div class="flex flex-row gap-sm items-center">  
+    <!-- Left -->
+    <div class="flex flex-row items-center justify-between _padding-left-sm" style="height: 55px;">
+      <div class="flex flex-row gap-sm items-center">
         <!-- Handle -->
         <button class="btn btn--sm btn--icon handle" style="cursor: grab;">
           <svg class="icon icon--xs fill-current color-contrast-medium" viewBox="0 0 24 24">
@@ -28,7 +28,7 @@
       </div>
       
       <!-- Right dropzone -->
-      <div v-if="pageStore.dragging" class="parent-dropzone _margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg" style="height: 45px;">
+      <div v-if="pageStore.dragging" class="parent-dropzone _margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg" style="height: 55px;">
         <Draggable 
           :list="page.children" 
           :animation="200"
@@ -43,8 +43,8 @@
           ghost-class="ghost"
           handle=".handle"
           item-key="id"
-          class="radius-lg"
-          style="width: 750px; height: 100%; display: block; background-color: #f3f3f3; border: 1px solid #fff;" 
+          class="radius-lg padding-x-xxs"
+          style="width: 750px; display: block;  height: 100%; background-color: #f3f3f3; border: 1px solid #fff;"
         >
           <template #item="{element}">
             <div :element="element"></div>
