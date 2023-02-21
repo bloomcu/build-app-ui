@@ -2,22 +2,25 @@
   <div v-if="pageStore.pages">
     <Draggable 
       :list="pageStore.pages" 
+      :animation="200"
       :swap-threshold="1"
       :empty-insert-threshold="1"
+      :forceFallback="true"
+      :preventOnFilter="false"
       @change="handleDragEvent"
       @start="pageStore.dragging = true"
       @end="pageStore.dragging = false"
       group="pages" 
       ghost-class="ghost"
       handle=".handle"
-      class="flex flex-column"
+      class="flex flex-column align-middle"
       item-key="id"
     >
       <template #item="{element}">
         <PageParent 
           :page="element" 
           class="_border _radius-md _shadow-sm _border-bottom _margin-bottom-xs _padding-y-xs"
-          style="box-shadow:0px 1px 0px #e6e6e6;"
+          style="box-shadow:0px 1px 0px #e1e1e1;"
         />
       </template>
     </Draggable>

@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="flex flex-row items-center justify-between _padding-left-sm _padding-y-sm">
+    <div class="flex flex-row items-center justify-between _padding-left-sm _padding-y-sm" style="height: 45px;">
       <!-- Left -->
       <div class="flex flex-row gap-sm items-center">  
         <!-- Handle -->
@@ -21,16 +21,21 @@
             {{ page.title }}
           </AppInlineEditor>
           
-          <a v-if="page.url" :href="page.url" target="_blank" class="text-xs color-contrast-low width-fit">{{ page.url }}</a>
+          <a v-if="page.url" :href="page.url" target="_blank" class="page-url text-xs color-contrast-low width-fit">
+            {{ page.url }}
+          </a>
         </div>
       </div>
       
       <!-- Right dropzone -->
-      <div v-if="true" class="_margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg">
+      <div v-if="pageStore.dragging" class="parent-dropzone _margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg" style="height: 45px;">
         <Draggable 
           :list="page.children" 
+          :animation="200"
           :swap-threshold="1"
           :empty-insert-threshold="1"
+          :forceFallback="true"
+          :preventOnFilter="false"
           @change="handleDragEvent" 
           @start="pageStore.dragging = true"
           @end="pageStore.dragging = false"
@@ -39,7 +44,7 @@
           handle=".handle"
           item-key="id"
           class="radius-lg"
-          style="width: 750px; min-height: 50px; display: block; background-color: #f3f3f3; border: 1px solid #fff;" 
+          style="width: 750px; height: 100%; display: block; background-color: #f3f3f3; border: 1px solid #fff;" 
         >
           <template #item="{element}">
             <div :element="element"></div>
@@ -102,8 +107,11 @@
     <div v-if="page.children && showChildren" class="margin-left-lg">
       <Draggable 
         :list="page.children" 
+        :animation="200"
         :swap-threshold="1"
         :empty-insert-threshold="1"
+        :forceFallback="true"
+        :preventOnFilter="false"
         @change="handleDragEvent" 
         @start="pageStore.dragging = true"
         @end="pageStore.dragging = false"
@@ -305,9 +313,17 @@ function handleDragEvent(event) {
 </script>
 
 <style lang="scss">
-// .ghost {
-//   // opacity: 0.5;
-//   border: none;
-//   background: #ede8fe;
-// }
+.ghost {
+  opacity: 0.3;
+  border: none;
+  background: #000;
+  // width: 20px;
+  // height: 20px;
+  // border-radius: 200px;
+  
+  .page-url,
+  .parent-dropzone {
+    display: none;
+  }
+}
 </style>
