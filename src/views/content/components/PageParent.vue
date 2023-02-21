@@ -278,12 +278,26 @@ function restore(id) {
   pageStore.selected = []
 }
 
+function recursiveUpdateOrder(page, id, order) {
+  if (page.id === id) {
+    page.order = order
+  } else if (page.children.length) {
+    page.children.forEach((child) => {
+      recursiveUpdateOrder(child, id, order)
+    })
+  }
+}
+
 function handleDragEvent(event) {
   if (event.moved) {
     pageStore.updateNesting({
       id: event.moved.element.id,
       parent_id: props.page.id,
       order: event.moved.newIndex,
+    })
+    
+    pageStore.pages.forEach((page) => {
+      recursiveUpdateOrder(page, event.moved.element.id, event.moved.newIndex)
     })
   }
   
@@ -292,6 +306,10 @@ function handleDragEvent(event) {
       id: event.added.element.id,
       parent_id: props.page.id,
       order: event.added.newIndex,
+    })
+    
+    pageStore.pages.forEach((page) => {
+      recursiveUpdateOrder(page, event.added.element.id, event.added.newIndex)
     })
   }
 }
