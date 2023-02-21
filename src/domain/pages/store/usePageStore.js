@@ -93,11 +93,13 @@ export const usePageStore = defineStore('pageStore', {
     },
     
     async updateNesting({id, parent_id, order} = {}) {
+      this.isLoading = true
       const auth = useAuthStore()
       
       await PageApi.updateNesting(auth.organization, id, parent_id, order)
         .then(response => {
           console.log(response.data)
+          this.index()
           // this.selected = []
         })
     },

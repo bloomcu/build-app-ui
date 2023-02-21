@@ -1,7 +1,7 @@
 <template>
   <div v-if="pageStore.pages">
     <Draggable 
-      :list="pageStore.pages" 
+      :list="sorted" 
       :animation="200"
       :swap-threshold="1"
       :empty-insert-threshold="1"
@@ -29,7 +29,7 @@
 
 <script setup>
 import Draggable from 'vuedraggable'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
 import PageParent from '@/views/content/components/PageParent.vue'
 
@@ -37,6 +37,25 @@ const pageStore = usePageStore()
 // const isHighlighting = ref(false)
 
 let drag = ref(true)
+
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        /* next line works with strings and numbers, 
+         * and you may want to customize it to your needs
+         */
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+}
+
+let sorted = computed(() => {
+  return pageStore.pages.sort(dynamicSort('order'))
+})
 
 function handleDragEvent(event) {
   if (event.moved) {
@@ -49,6 +68,7 @@ function handleDragEvent(event) {
   }
   
   if (event.added) {
+    
     pageStore.updateNesting({
       id: event.added.element.id,
       // parent_id: null,
