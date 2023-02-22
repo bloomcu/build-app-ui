@@ -1,6 +1,8 @@
 <template>
   <div v-if="pageStore.pages">
-    <Draggable 
+    <ContentPages :pages="pageStore.parents"/>
+    
+    <!-- <Draggable 
       :list="sorted" 
       :animation="200"
       :swap-threshold="1"
@@ -23,15 +25,16 @@
           style="box-shadow:0px 1px 0px #e1e1e1;"
         />
       </template>
-    </Draggable>
+    </Draggable> -->
   </div>
 </template>
 
 <script setup>
-import Draggable from 'vuedraggable'
+// import Draggable from 'vuedraggable'
 import { ref, computed } from 'vue'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
-import PageParent from '@/views/content/components/PageParent.vue'
+// import PageParent from '@/views/content/components/PageParent.vue'
+import ContentPages from '@/views/content/components/ContentPages.vue'
 
 const pageStore = usePageStore()
 // const isHighlighting = ref(false)

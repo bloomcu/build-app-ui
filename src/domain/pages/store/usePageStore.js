@@ -14,6 +14,20 @@ export const usePageStore = defineStore('pageStore', {
     isLoading: false,
     dragging: false, // TODO: Remove
   }),
+  
+  getters: {
+    parents: (state) => {
+      return state.pages.filter((page) => {
+        return page.parent_id == null
+      })
+    },
+    
+    children: (state) => {
+      return parentId => state.pages.filter((page) => {
+        return page.parent_id === parentId
+      })
+    }
+  },
 
   actions: {
     index(params) {

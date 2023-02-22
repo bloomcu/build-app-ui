@@ -2,7 +2,7 @@
   <div class="content-table__top-bar flex items-center justify-between z-index-2 shadow-xs bg radius-md radius-top-left-0 radius-top-right-0 padding-y-xs padding-x-xs margin-bottom-sm">
     <!-- Left -->
     <div class="flex items-center">
-      <!-- <span class="text-sm">{{ pageStore.pages.length }} page(s)</span> -->
+      <span class="text-sm">{{ pageStore.pages.length }} page(s)</span>
       <button v-if="pageStore.selected.length" @click="pageStore.clearSelectedPages()" class="btn btn--sm margin-left-sm">
         <span class="margin-right-xxs">{{ pageStore.selected.length }} selected</span>
         <IconClose size="xxs" class="color-primary"/>
