@@ -11,7 +11,7 @@
         </button>
         
         <!-- Toggle -->
-        <button v-if="children.length" @click="pageStore.toggleParent(page.id)" class="btn btn--sm btn--icon">
+        <button v-if="pageStore.children(page.id).length" @click="pageStore.toggleParent(page.id)" class="btn btn--sm btn--icon">
           <IconAngleLeft size="xs" :class="pageStore.toggled.includes(page.id) ? 'rotate-90' : 'rotate-270'" class="color-contrast-medium"/>
         </button>
         
@@ -58,7 +58,7 @@
         
         <!-- Archive -->
         <div v-if="!page.deleted_at">
-          <div v-if="children.length" class="btn--icon opacity-0">
+          <div v-if="pageStore.children(page.id).length" class="btn--icon opacity-0">
             <IconTrash size="xs" class="color-contrast-medium color-opacity-60%"/>
           </div>
           <button v-else @click="destroy(page.id)" class="btn btn--sm btn--icon">
@@ -90,18 +90,21 @@
     </div>
     
     <!-- Recursive children -->
-    <div v-if="children.length && pageStore.toggled.includes(page.id)" class="margin-left-lg">
-      <ContentPage
-        v-for="child in children"
-        :key="child.id"
-        :page="child"
-      />
+    <div v-if="pageStore.children(page.id).length && pageStore.toggled.includes(page.id)" class="margin-left-lg">
+      <VueDraggableNext :list="pageStore.children(page.id)" @change="handleDragEvent" :animation="150" :group="{ name: 'pages', pull: true, put: true }">
+        <ContentPage
+          v-for="child in pageStore.children(page.id)"
+          :key="child.id"
+          :page="child"
+        />
+      </VueDraggableNext>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import { VueDraggableNext } from 'vue-draggable-next'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
 import AppInlineEditor from '@/app/components/base/forms/AppInlineEditor.vue'
 import IconAngleLeft from '@/app/components/base/icons/IconAngleLeft.vue'
@@ -118,9 +121,9 @@ const pageStore = usePageStore()
 
 const showChildren = ref(false)
 
-let children = computed(() => {
-  return pageStore.children(props.page.id).sort((a, b) => a.order - b.order );
-})
+// let children = computed(() => {
+//   return pageStore.children(props.page.id).sort((a, b) => a.order - b.order );
+// })
 
 function updateTitle(id, title) {
   pageStore.update([id], {title: title})
@@ -179,22 +182,33 @@ function restore(id) {
 }
 
 function handleDragEvent(event) {
-  if (event.moved) {
-    console.log('moved')
-    // pageStore.updateNesting({
-    //   id: event.moved.element.id,
-    //   parent_id: props.page.id,
-    //   order: event.moved.newIndex,
-    // })
+  let e = event.moved || event.added
+  console.log('child moved or added', e)
+  
+  if (e) {
+    pageStore.updateNesting({
+      id: e.element.id,
+      parent_id: props.page.id,
+      order: e.newIndex,
+    })
   }
   
-  if (event.added) {
-    console.log('moved')
-    // pageStore.updateNesting({
-    //   id: event.added.element.id,
-    //   parent_id: props.page.id,
-    //   order: event.added.newIndex,
-    // })
-  }
+  // if (event.moved) {
+  //   console.log('child moved', event.moved)
+  //   // pageStore.updateNesting({
+  //   //   id: event.moved.element.id,
+  //   //   parent_id: props.page.id,
+  //   //   order: event.moved.newIndex,
+  //   // })
+  // }
+  // 
+  // if (event.added) {
+  //   console.log('child added', event.added)
+  //   // pageStore.updateNesting({
+  //   //   id: event.added.element.id,
+  //   //   parent_id: props.page.id,
+  //   //   order: event.added.newIndex,
+  //   // })
+  // }
 }
 </script>

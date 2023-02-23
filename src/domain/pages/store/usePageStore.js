@@ -19,13 +19,14 @@ export const usePageStore = defineStore('pageStore', {
     parents: (state) => {
       return state.pages.filter((page) => {
         return page.parent_id == null
-      })
+      }).sort((a, b) => a.order - b.order )
+      // .sort((a, b) => a.order - b.order )
     },
     
     children: (state) => {
       return parentId => state.pages.filter((page) => {
         return page.parent_id === parentId
-      })
+      }).sort((a, b) => a.order - b.order )
     }
   },
 
@@ -108,13 +109,18 @@ export const usePageStore = defineStore('pageStore', {
     },
     
     async updateNesting({id, parent_id, order} = {}) {
-      // this.isLoading = true
       const auth = useAuthStore()
       
+      // Update order in store
+      let page = this.pages.find(page => page.id === id)
+          page.parent_id = parent_id
+          page.order = order
+      
+      // Update order in database
       await PageApi.updateNesting(auth.organization, id, parent_id, order)
         .then(response => {
           console.log(response.data)
-          this.index()
+          // this.index()
           // this.selected = []
         })
     },
