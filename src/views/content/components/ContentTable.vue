@@ -41,6 +41,10 @@ const pageStore = usePageStore()
 
 let drag = ref(true)
 
+let sortedParents = computed(() => {
+  return props.pages.sort((a, b) => a.order - b.order );
+})
+
 function dynamicSort(property) {
     var sortOrder = 1;
     if(property[0] === "-") {

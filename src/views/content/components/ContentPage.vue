@@ -11,7 +11,7 @@
         </button>
         
         <!-- Toggle -->
-        <button v-if="pageStore.children(page.id).length" @click="pageStore.toggleParent(page.id)" class="btn btn--sm btn--icon">
+        <button v-if="children.length" @click="pageStore.toggleParent(page.id)" class="btn btn--sm btn--icon">
           <IconAngleLeft size="xs" :class="pageStore.toggled.includes(page.id) ? 'rotate-90' : 'rotate-270'" class="color-contrast-medium"/>
         </button>
         
@@ -49,7 +49,7 @@
             ]" 
             :key="option.slug"
             :class="page.status && page.status.slug === option.slug ? 'btns__btn--selected' : null"
-            @click="handleStatusClick(page.id, option)"
+            @click="updateStatus(page.id, option)"
             class="btns__btn"
           >
             {{ option.title }}
@@ -58,7 +58,7 @@
         
         <!-- Archive -->
         <div v-if="!page.deleted_at">
-          <div v-if="pageStore.children(page.id).length" class="btn--icon opacity-0">
+          <div v-if="children.length" class="btn--icon opacity-0">
             <IconTrash size="xs" class="color-contrast-medium color-opacity-60%"/>
           </div>
           <button v-else @click="destroy(page.id)" class="btn btn--sm btn--icon">
@@ -90,9 +90,9 @@
     </div>
     
     <!-- Recursive children -->
-    <div v-if="pageStore.children(page.id).length && pageStore.toggled.includes(page.id)" class="margin-left-lg">
+    <div v-if="children.length && pageStore.toggled.includes(page.id)" class="margin-left-lg">
       <ContentPage
-        v-for="child in pageStore.children(page.id)"
+        v-for="child in children"
         :key="child.id"
         :page="child"
       />
@@ -103,7 +103,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
-
 import AppInlineEditor from '@/app/components/base/forms/AppInlineEditor.vue'
 import IconAngleLeft from '@/app/components/base/icons/IconAngleLeft.vue'
 import IconTrash from '@/app/components/base/icons/IconTrash.vue'
@@ -119,23 +118,8 @@ const pageStore = usePageStore()
 
 const showChildren = ref(false)
 
-function dynamicSort(property) {
-    var sortOrder = 1;
-    if(property[0] === "-") {
-        sortOrder = -1;
-        property = property.substr(1);
-    }
-    return function (a,b) {
-        /* next line works with strings and numbers, 
-         * and you may want to customize it to your needs
-         */
-        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-        return result * sortOrder;
-    }
-}
-
-let sorted = computed(() => {
-  return props.page.children.sort(dynamicSort('order'))
+let children = computed(() => {
+  return pageStore.children(props.page.id).sort((a, b) => a.order - b.order );
 })
 
 function updateTitle(id, title) {
@@ -146,57 +130,49 @@ function updateUrl(id, url) {
   pageStore.update([id], {url: url})
 }
 
-function handleStatusClick(id, status) {
-  // TODO: Abstract this away
+function updateStatus(id, status) {
+  // Select this page
+  pageStore.selectPage(id)
   
-  // Check is this page selected already
-  let index = pageStore.selected.indexOf(id)
-      // if it is not selected, then select it
-      index === -1 ? pageStore.selected.push(id) : null
-      
+  // Update page(s) in store
+  pageStore.pages.map((page) => {
+    if (pageStore.selected.includes(page.id)) {
+      page.status = status
+    }
+  })
+  
   // Update all selected pages in db
   pageStore.update(pageStore.selected, {
     status: status.slug
   })
   
-  // Reset selected
+  // Reset selected page(s)
   pageStore.selected = []
 }
 
 function destroy(id) {
-  // TODO: Abstract this away
-  
-  // Check is this page selected already
-  let index = pageStore.selected.indexOf(id)
-      // if it is not selected, then select it
-      index === -1 ? pageStore.selected.push(id) : null
-  
-  // Archive selected pages in store
-  // Optimize this by reducing down to only selected
-  // Optimize by flattening pages array
-  pageStore.pages = pageStore.pages.filter((p) => !pageStore.selected.includes(p.id)) // remove resources
+  // Select this page
+  pageStore.selectPage(id)
   
   // Archive selected pages in db
   pageStore.destroy(pageStore.selected)
+  
+  // Archive selected pages in store
+  pageStore.pages = pageStore.pages.filter((p) => !pageStore.selected.includes(p.id)) // remove resources
   
   // Reset selected
   pageStore.selected = []
 }
 
 function restore(id) {
-  // TODO: Abstract this away
-  
-  // Check is this page selected already
-  let index = pageStore.selected.indexOf(id)
-      // if it is not selected, then select it
-      index === -1 ? pageStore.selected.push(id) : null
-  
-  // Restore selected pages in store
-  // Optimize by flattening pages array
-  pageStore.pages = pageStore.pages.filter((p) => !pageStore.selected.includes(p.id)) // restore resources
+  // Select this page
+  pageStore.selectPage(id)
   
   // Archive selected pages in db
   pageStore.restore(pageStore.selected)
+  
+  // Restore selected pages in store
+  pageStore.pages = pageStore.pages.filter((p) => !pageStore.selected.includes(p.id)) // restore resources
   
   // Reset selected
   pageStore.selected = []

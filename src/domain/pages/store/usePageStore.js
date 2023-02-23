@@ -32,7 +32,7 @@ export const usePageStore = defineStore('pageStore', {
   actions: {
     index(params) {
       const auth = useAuthStore()
-      // this.isLoading = true
+      this.isLoading = true
 
       PageApi.index(auth.organization, params)
         .then(response => {
@@ -119,39 +119,39 @@ export const usePageStore = defineStore('pageStore', {
         })
     },
 
-    selectPage(id, event) {
-      // Add to array if not present. Remove if already present.
-      // TODO: Abstract this away
+    selectPage(id, event = null) {
+      // Check is this page selected already
       let index = this.selected.indexOf(id)
+          // if it is not selected, then select it
           index === -1 ? this.selected.push(id) : this.selected.splice(index, 1)
 
-      // Handle multiselect
-      if (event.shiftKey) {
-        if (this.lastSelected == null) {
-          this.lastSelected = id
-          return;
-        }
-
-        // Get array of all page id's
-        let pageIds = this.pages.map((page) => page.id)
-
-        // Get selection range
-        let from = pageIds.indexOf(id)
-        let to = pageIds.indexOf(this.lastSelected)
-
-        // Setup the range of our selection
-        let range = [to, from].sort()
-
-        // Slice our selection from source array
-        let selection = pageIds.slice(...range)
-
-        // Add selection to destination array
-        this.selected = [...new Set([...this.selected, ...selection])];
-
-        this.lastSelected = null
-      }
-
-      this.lastSelected = id
+      // // Handle multiselect
+      // if (event && event.shiftKey) {
+      //   if (this.lastSelected == null) {
+      //     this.lastSelected = id
+      //     return;
+      //   }
+      // 
+      //   // Get array of all page id's
+      //   let pageIds = this.pages.map((page) => page.id)
+      // 
+      //   // Get selection range
+      //   let from = pageIds.indexOf(id)
+      //   let to = pageIds.indexOf(this.lastSelected)
+      // 
+      //   // Setup the range of our selection
+      //   let range = [to, from].sort()
+      // 
+      //   // Slice our selection from source array
+      //   let selection = pageIds.slice(...range)
+      // 
+      //   // Add selection to destination array
+      //   this.selected = [...new Set([...this.selected, ...selection])];
+      // 
+      //   this.lastSelected = null
+      // }
+      // 
+      // this.lastSelected = id
     },
     
     selectAllPages() {
@@ -163,9 +163,9 @@ export const usePageStore = defineStore('pageStore', {
     },
     
     toggleParent(id) {
-      // Add to array if not present. Remove if already present.
-      // TODO: Abstract this away
+      // Check is this page toggled already
       let index = this.toggled.indexOf(id)
+          // if it is not toggled, then toggle it
           index === -1 ? this.toggled.push(id) : this.toggled.splice(index, 1)
     },
     
