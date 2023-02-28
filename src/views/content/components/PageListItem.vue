@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import Draggable from 'vuedraggable'
+// import Draggable from 'vuedraggable'
 import { ref } from 'vue'
 import AppInlineEditor from '@/app/components/base/forms/AppInlineEditor.vue'
 import IconAngleLeft from '@/app/components/base/icons/IconAngleLeft.vue'
