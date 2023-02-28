@@ -4,14 +4,14 @@
       <!-- Left -->
       <div class="flex flex-row gap-sm items-center">
         <!-- Handle -->
-        <button class="btn btn--sm btn--icon handle" style="cursor: grab;">
+        <button class="btn btn--sm btn--icon draggable-handle" style="cursor: grab;">
           <svg class="icon icon--xs fill-current color-contrast-medium" viewBox="0 0 24 24">
             <g><path data-color="color-2" d="M23,13H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,13,23,13z"></path> <path d="M23,6H1C0.4,6,0,5.6,0,5s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,6,23,6z"></path> <path d="M23,20H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,20,23,20z"></path></g>
           </svg>
         </button>
         
         <!-- Toggle -->
-        <button v-if="pageStore.children(page.id).length" @click="pageStore.toggleParent(page.id)" class="btn btn--sm btn--icon">
+        <button v-if="page.children.length" @click="pageStore.toggleParent(page.id)" class="btn btn--sm btn--icon">
           <IconAngleLeft size="xs" :class="pageStore.toggled.includes(page.id) ? 'rotate-90' : 'rotate-270'" class="color-contrast-medium"/>
         </button>
         
@@ -28,13 +28,20 @@
       </div>
       
       <!-- Right dropzone -->
-      <div v-if="pageStore.dragging" class="parent-dropzone _margin-left-xxxl _margin-bottom-sm _bg-dark _radius-lg" style="height: 55px;">
-        <div 
-        class="radius-lg padding-x-xxs"
-        style="width: 750px; display: block;  height: 100%; background-color: #f3f3f3; border: 1px solid #fff;"
+      <div v-if="pageStore.dragging" class="parent-dropzone" style="height: 55px;">
+        <VueDraggableNext 
+          :list="page.children" 
+          :group="{ name: 'pages' }" 
+          :swap-threshold=".5"
+          :empty-insert-threshold="1"
+          @change="handleDragEvent"
+          ghost-class="draggable-ghost"
+          drag-class="draggable-drag"
+          class="radius-lg"
+          style="width: 750px; display: block;  height: 55px; background-color: #f3f3f3; border: 1px solid #fff;"
         >
-        Dropzone  
-        </div>
+          
+        </VueDraggableNext>
       </div>
       
       <!-- Right Controls -->
@@ -58,7 +65,7 @@
         
         <!-- Archive -->
         <div v-if="!page.deleted_at">
-          <div v-if="pageStore.children(page.id).length" class="btn--icon opacity-0">
+          <div v-if="page.children.length" class="btn--icon opacity-0">
             <IconTrash size="xs" class="color-contrast-medium color-opacity-60%"/>
           </div>
           <button v-else @click="destroy(page.id)" class="btn btn--sm btn--icon">
@@ -90,10 +97,20 @@
     </div>
     
     <!-- Recursive children -->
-    <div v-if="pageStore.children(page.id).length && pageStore.toggled.includes(page.id)" class="margin-left-lg">
-      <VueDraggableNext :list="pageStore.children(page.id)" @change="handleDragEvent" :animation="150" :group="{ name: 'pages', pull: true, put: true }">
+    <div v-if="page.children.length && pageStore.toggled.includes(page.id)" class="margin-left-lg">
+      <VueDraggableNext 
+        :list="page.children" 
+        :group="{ name: 'pages', pull: true, put: true }"
+        :animation="150" 
+        @change="handleDragEvent" 
+        @start="pageStore.dragging = true"
+        @end="pageStore.dragging = false"
+        handle=".draggable-handle"
+        ghost-class="draggable-ghost"
+        drag-class="draggable-drag"
+      >
         <ContentPage
-          v-for="child in pageStore.children(page.id)"
+          v-for="child in page.children"
           :key="child.id"
           :page="child"
         />
@@ -121,30 +138,60 @@ const pageStore = usePageStore()
 
 const showChildren = ref(false)
 
-// let children = computed(() => {
-//   return pageStore.children(props.page.id).sort((a, b) => a.order - b.order );
-// })
+// TODO: Move to composable
+// TODO: Optimize so it does not iterate over array more than once
+function findById(array, id) {
+  console.log('finding...')
+  let result;
+  array.some(o => o.id === id && (result = o) || (result = findById(o.children, id || [])));
+  return result;
+}
+
+// TODO: Move to composable
+// function findByCondition(array, condition) {
+//     if (array.length === 0) {
+//         return [];
+//     }
+//     const [head, ...tail] = array;
+//     if (condition(head)) {
+//         return [head, ...findByCondition(tail, condition)];
+//     }
+//     return findByCondition(tail, condition);
+// }
+
+// TODO: Move to composable
+// Update multiple attributes in object
+// function setAttributes(el, attrs) {
+//   for(var key in attrs) {
+//     el.setAttribute(key, attrs[key]);
+//   }
+// }
 
 function updateTitle(id, title) {
+  let page = findById(pageStore.pages, id)
+      page.title = title
+
   pageStore.update([id], {title: title})
 }
 
 function updateUrl(id, url) {
+  let page = findById(pageStore.pages, id)
+      page.url = url
+  
   pageStore.update([id], {url: url})
 }
 
 function updateStatus(id, status) {
-  // Select this page
+  // Select page
   pageStore.selectPage(id)
   
-  // Update page(s) in store
-  pageStore.pages.map((page) => {
-    if (pageStore.selected.includes(page.id)) {
-      page.status = status
-    }
+  // Update selected page(s) in store
+  pageStore.selected.forEach(id => {
+    let page = findById(pageStore.pages, id)
+        page.status = status
   })
-  
-  // Update all selected pages in db
+
+  // Update selected pages in db
   pageStore.update(pageStore.selected, {
     status: status.slug
   })
@@ -154,7 +201,7 @@ function updateStatus(id, status) {
 }
 
 function destroy(id) {
-  // Select this page
+  // Select page
   pageStore.selectPage(id)
   
   // Archive selected pages in db
@@ -183,7 +230,6 @@ function restore(id) {
 
 function handleDragEvent(event) {
   let e = event.moved || event.added
-  console.log('child moved or added', e)
   
   if (e) {
     pageStore.updateNesting({
@@ -192,23 +238,5 @@ function handleDragEvent(event) {
       order: e.newIndex,
     })
   }
-  
-  // if (event.moved) {
-  //   console.log('child moved', event.moved)
-  //   // pageStore.updateNesting({
-  //   //   id: event.moved.element.id,
-  //   //   parent_id: props.page.id,
-  //   //   order: event.moved.newIndex,
-  //   // })
-  // }
-  // 
-  // if (event.added) {
-  //   console.log('child added', event.added)
-  //   // pageStore.updateNesting({
-  //   //   id: event.added.element.id,
-  //   //   parent_id: props.page.id,
-  //   //   order: event.added.newIndex,
-  //   // })
-  // }
 }
 </script>
