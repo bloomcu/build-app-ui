@@ -6,7 +6,7 @@
   >
     <div class="flex justify-between">
       <div>
-        <h2 class="text-md margin-bottom-xxs">Export {{ pageStore.pages.length }} page(s)</h2>
+        <h2 class="text-md margin-bottom-xxs">Export pages</h2>
       </div>
       
       <div>
