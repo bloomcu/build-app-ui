@@ -21,9 +21,12 @@
             {{ page.title }}
           </AppInlineEditor>
           
-          <a v-if="page.url" :href="page.url" target="_blank" class="page-url text-xs color-contrast-low width-fit">
+          <AppInlineEditor v-if="page.url" :id="page.id" @updated="updateUrl" class="page-url width-fit text-sm color-contrast-low">
             {{ page.url }}
-          </a>
+          </AppInlineEditor>
+          <AppInlineEditor v-else :id="page.id" @updated="updateUrl" class="page-url width-fit text-sm color-contrast-lower">
+            Add url
+          </AppInlineEditor>
         </div>
       </div>
       
@@ -175,10 +178,12 @@ function updateTitle(id, title) {
 }
 
 function updateUrl(id, url) {
-  let page = findById(pageStore.pages, id)
-      page.url = url
-  
-  pageStore.update([id], {url: url})
+  if (url !== 'Add url') {
+    let page = findById(pageStore.pages, id)
+        page.url = url
+    
+    pageStore.update([id], {url: url})  
+  }
 }
 
 function updateStatus(id, status) {
