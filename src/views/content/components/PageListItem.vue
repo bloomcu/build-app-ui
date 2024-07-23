@@ -10,7 +10,7 @@
         </div>
       </div>
       
-      <ul v-if="page.children.length">
+      <ul v-if="page.children && page.children.length">
         <PageListItem v-for="child in page.children" :page="child" :key="child.id"/>
       </ul>
     </li>

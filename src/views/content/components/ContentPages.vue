@@ -3,7 +3,7 @@
     :list="pageStore.pages"  
     :group="{ name: 'pages', pull: true, put: true }"
     :animation="150"
-    @change="handleDragEvent" 
+    @change="handleDragEvent"
     @start="pageStore.dragging = true"
     @end="pageStore.dragging = false"
     handle=".draggable-handle"

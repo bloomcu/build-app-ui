@@ -30,7 +30,7 @@ export const useMediaStore = defineStore('mediaStore', {
               this.isLoading = false
               this.files = response.data.data
             }).catch(error => {
-              console.log('Error', error.response.data)
+              console.log('Error', error.response)
             })
         },
         
