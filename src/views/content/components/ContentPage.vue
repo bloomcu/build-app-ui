@@ -11,7 +11,7 @@
         </button>
         
         <!-- Toggle -->
-        <button v-if="page.children.length" @click="pageStore.toggleParent(page.id)" class="btn btn--sm btn--icon">
+        <button v-if="typeof page.children != 'undefined' && page.children.length" @click="pageStore.toggleParent(page.id)" class="btn btn--sm btn--icon">
           <IconAngleLeft size="xs" :class="pageStore.toggled.includes(page.id) ? 'rotate-90' : 'rotate-270'" class="color-contrast-medium"/>
         </button>
         
@@ -68,7 +68,7 @@
         
         <!-- Archive -->
         <div v-if="!page.deleted_at">
-          <div v-if="page.children.length" class="btn--icon opacity-0">
+          <div v-if="typeof page.children != 'undefined' && page.children.length" class="btn--icon opacity-0">
             <IconTrash size="xs" class="color-contrast-medium color-opacity-60%"/>
           </div>
           <button v-else @click="destroy(page.id)" class="btn btn--sm btn--icon">
@@ -100,7 +100,7 @@
     </div>
     
     <!-- Recursive children -->
-    <div v-if="page.children.length && pageStore.toggled.includes(page.id)" class="margin-left-lg">
+    <div v-if="typeof page.children != 'undefined' && page.children.length && pageStore.toggled.includes(page.id)" class="margin-left-lg">
       <VueDraggableNext 
         :list="page.children" 
         :group="{ name: 'pages', pull: true, put: true }"
@@ -143,11 +143,22 @@ const showChildren = ref(false)
 
 // TODO: Move to composable
 // TODO: Optimize so it does not iterate over array more than once
-function findById(array, id) {
-  console.log('finding...')
-  let result;
-  array.some(o => o.id === id && (result = o) || (result = findById(o.children, id || [])));
-  return result;
+function findById(arrayOfObjects, searchId) {
+  console.log('Finding object...');
+  let matchedObject;
+
+  arrayOfObjects.some(currentObject => {
+    if (currentObject.id === searchId) {
+      matchedObject = currentObject;
+      return true; // Stop searching as soon as the match is found
+    } else if (currentObject.children) {
+      matchedObject = findById(currentObject.children, searchId);
+      return !!matchedObject; // Continue searching if a match is found in children
+    }
+    return false; // Continue to the next object in the array
+  });
+
+  return matchedObject;
 }
 
 // TODO: Move to composable
@@ -188,8 +199,8 @@ function updateUrl(id, url) {
 
 function updateStatus(id, status) {
   // Select page
-  pageStore.selectPage(id)
   
+  pageStore.selectPage(id)
   // Update selected page(s) in store
   pageStore.selected.forEach(id => {
     let page = findById(pageStore.pages, id)
