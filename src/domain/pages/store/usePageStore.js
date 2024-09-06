@@ -48,7 +48,10 @@ export const usePageStore = defineStore('pageStore', {
 
       await PageApi.store(auth.organization, page)
         .then(response => {
-          this.pages.unshift(response.data.data)
+          // Update to allow nesting on creation
+          let page = response.data.data;
+          page.children = [];
+          this.pages.unshift(page);
         }).catch(error => {
           return Promise.reject(error)
         })
