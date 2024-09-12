@@ -199,8 +199,8 @@ function updateUrl(id, url) {
 
 function updateStatus(id, status) {
   // Select page
-  
   pageStore.selectPage(id)
+  
   // Update selected page(s) in store
   pageStore.selected.forEach(id => {
     let page = findById(pageStore.pages, id)
@@ -223,12 +223,21 @@ function destroy(id) {
   // Archive selected pages in db
   pageStore.destroy(pageStore.selected)
   
-  // Archive selected pages in store
-  pageStore.pages = pageStore.pages.filter((p) => !pageStore.selected.includes(p.id)) // remove resources
+  // Update pages in store recurse to update deleted children
+  pageStore.pages = pageStore.pages.filter(function f(p) {
+    if(p.children){
+        p.children = p.children.filter(f);
+    }
+    if(!pageStore.selected.includes(p.id)){
+      return true
+    } 
+  }); // remove resources
   
   // Reset selected
   pageStore.selected = []
 }
+
+
 
 function restore(id) {
   // Select this page
