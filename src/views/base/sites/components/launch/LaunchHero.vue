@@ -21,9 +21,10 @@
             {{ moment(siteStore.launch.launch_date).format('dddd') }}, 
             {{ moment(siteStore.launch.launch_date).format('LL') }}
           </h3>
-          <p class="text-sm">
-            {{ moment(siteStore.launch.launch_date).format('h:mm A') }} (Mountain)
-          </p>
+          <ul class="text-sm">
+            <li>{{ siteStore.mountainTime.format('h:mm A') }} (Mountain)</li>
+            <li>{{ siteStore.mountainTime.clone().local().format('h:mm A') }} ({{ moment.tz.guess() }})</li>
+          </ul>
         </div>
       </div>
     </div>

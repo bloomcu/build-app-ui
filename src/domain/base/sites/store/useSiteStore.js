@@ -2,6 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { siteApi as SiteApi } from '@/domain/base/sites/api/siteApi'
 
 import { useAuthStore } from '@/domain/base/auth/store/useAuthStore'
+import moment from "moment-timezone"
 
 export const useSiteStore = defineStore('siteStore', {
     state: () => ({
@@ -12,7 +13,8 @@ export const useSiteStore = defineStore('siteStore', {
     }),
     
     getters: {
-      launch: (state) => state.site.launch_info
+      launch: (state) => state.site.launch_info,
+      mountainTime: (state) => moment.tz(state.site.launch_info.launch_date, "America/Denver")
     },
     
     actions: {

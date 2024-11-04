@@ -8,11 +8,14 @@
         </div>
         <div class="col-12">
           <div class="card card--dark">
-            <h3 class="text-base margin-bottom-xxs">
+            <h3 class="text-base margin-bottom-xxs" v-if="siteStore.launch.freeze_date">
               {{ moment(siteStore.launch.freeze_date).format('dddd') }}, 
-              {{ moment(siteStore.launch.freeze_date).format('LL') }}
+              {{ moment(siteStore.launch.freeze_date).format('LL') }} 
             </h3>
-            <p class="text-sm">
+            <h3 class="text-base margin-bottom-xxs" v-else>
+              Content freeze time TBD
+            </h3>
+            <p class="text-sm" v-if="siteStore.launch.freeze_date ">
               {{ moment(siteStore.launch.freeze_date).format('h:mm A') }} (Mountain)
             </p>
           </div>
